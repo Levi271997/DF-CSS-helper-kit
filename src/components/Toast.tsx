@@ -24,7 +24,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
             key={t.id}
             role="status"
             className={`rounded-lg px-4 py-2.5 text-sm font-medium text-white shadow-lg ${
-              t.kind === "error" ? "bg-rose-600" : "bg-slate-900"
+              t.kind === "error" ? "bg-rose-600" : "bg-brand-700"
             }`}
           >
             {t.message}

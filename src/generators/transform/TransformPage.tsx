@@ -27,7 +27,7 @@ export default function TransformPage() {
           {/* Outline of the untransformed element for reference */}
           <div className="absolute h-32 w-32 rounded-xl border-2 border-dashed border-slate-300 sm:h-40 sm:w-40" />
           <div
-            className="relative flex h-32 w-32 items-center justify-center rounded-xl bg-indigo-600 text-sm font-semibold text-white shadow-lg sm:h-40 sm:w-40"
+            className="relative flex h-32 w-32 items-center justify-center rounded-xl bg-brand-600 text-sm font-semibold text-white shadow-lg sm:h-40 sm:w-40"
             style={declsToStyle(decls)}
           >
             Element

@@ -9,7 +9,7 @@ import { newId } from "@/lib/id"
 import { buildShadow, SHADOW_PRESETS, type ShadowLayer, type ShadowSettings } from "./build-css"
 
 const newLayer = (): ShadowLayer => ({
-  id: newId(), enabled: true, inset: false, x: 0, y: 8, blur: 24, spread: -4, color: color("#0f172a", 0.2),
+  id: newId(), enabled: true, inset: false, x: 0, y: 8, blur: 24, spread: -4, color: color("#1e1242", 0.2),
 })
 
 const defaults = (): ShadowSettings => ({

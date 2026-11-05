@@ -100,7 +100,7 @@ export default function ClipPathPage() {
           </thead>
           <tbody>
             {points.map((p, i) => (
-              <tr key={p.id} className={`border-t border-slate-100 ${selected === p.id ? "bg-indigo-50" : ""}`} onClick={() => setSelected(p.id)}>
+              <tr key={p.id} className={`border-t border-slate-100 ${selected === p.id ? "bg-brand-50" : ""}`} onClick={() => setSelected(p.id)}>
                 <td className="px-4 py-1.5 font-mono text-slate-500">{i + 1}</td>
                 {(["x", "y"] as const).map((axis) => (
                   <td key={axis} className="px-4 py-1.5">
@@ -176,7 +176,7 @@ export default function ClipPathPage() {
             <polygon
               points={points.map((p) => `${p.x},${p.y}`).join(" ")}
               fill="none"
-              stroke="#4f46e5"
+              stroke="#1e1242"
               strokeWidth="0.5"
               vectorEffect="non-scaling-stroke"
               pointerEvents="none"
@@ -187,8 +187,8 @@ export default function ClipPathPage() {
                 cx={p.x}
                 cy={p.y}
                 r={selected === p.id ? 2.6 : 2}
-                fill={selected === p.id ? "#4f46e5" : "#ffffff"}
-                stroke="#4f46e5"
+                fill={selected === p.id ? "#f8a02d" : "#ffffff"}
+                stroke="#1e1242"
                 strokeWidth="0.6"
                 className="cursor-grab active:cursor-grabbing"
                 onPointerDown={(e) => onHandleDown(e, p.id)}
@@ -225,9 +225,9 @@ export default function ClipPathPage() {
                     update({ points: toPoints(p.coords) })
                     setSelected(null)
                   }}
-                  className="flex flex-col items-center gap-1.5 rounded-lg border border-slate-200 p-2 hover:border-indigo-300 hover:bg-indigo-50"
+                  className="flex flex-col items-center gap-1.5 rounded-lg border border-slate-200 p-2 hover:border-brand-300 hover:bg-brand-50"
                 >
-                  <span className="h-9 w-9 bg-indigo-500" style={{ clipPath: polygonValue(toPoints(p.coords)) }} />
+                  <span className="h-9 w-9 bg-brand-600" style={{ clipPath: polygonValue(toPoints(p.coords)) }} />
                   <span className="text-[11px] text-slate-600">{p.name}</span>
                 </button>
               ))}

@@ -4,7 +4,7 @@ import { clamp } from "@/lib/color"
 type Variant = "primary" | "secondary" | "ghost" | "danger"
 
 const variants: Record<Variant, string> = {
-  primary: "bg-indigo-600 text-white hover:bg-indigo-700 disabled:bg-indigo-300",
+  primary: "bg-accent-400 text-brand-600 hover:bg-accent-500 disabled:bg-accent-300/50 disabled:text-brand-600/40",
   secondary: "border border-slate-300 bg-white text-slate-700 hover:bg-slate-50 disabled:text-slate-400",
   ghost: "text-slate-600 hover:bg-slate-100 disabled:text-slate-300",
   danger: "text-rose-600 hover:bg-rose-50 disabled:text-rose-300",
@@ -18,7 +18,7 @@ export function Button({
   return (
     <button
       type="button"
-      className={`inline-flex items-center justify-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500 disabled:cursor-not-allowed ${variants[variant]} ${className}`}
+      className={`inline-flex items-center justify-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-400 disabled:cursor-not-allowed ${variants[variant]} ${className}`}
       {...props}
     />
   )
@@ -100,7 +100,7 @@ export function Toggle({
         type="checkbox"
         checked={checked}
         onChange={(e) => onChange(e.target.checked)}
-        className="h-4 w-4 rounded border-slate-300 accent-indigo-600"
+        className="h-4 w-4 rounded border-slate-300 accent-accent-500"
       />
       {label}
     </label>
@@ -128,7 +128,7 @@ export function Segmented<T extends string>({
           aria-checked={value === o.value}
           onClick={() => onChange(o.value)}
           className={`rounded-md px-3 py-1 text-sm font-medium transition-colors ${
-            value === o.value ? "bg-white text-slate-900 shadow-sm" : "text-slate-500 hover:text-slate-800"
+            value === o.value ? "bg-white text-brand-600 shadow-sm" : "text-slate-500 hover:text-slate-800"
           }`}
         >
           {o.label}

@@ -32,7 +32,7 @@ export function buildShadow(s: ShadowSettings): Decl[] {
 
 type PresetLayer = Omit<ShadowLayer, "id" | "enabled">
 const layer = (x: number, y: number, blur: number, spread: number, a: number, inset = false): PresetLayer => ({
-  x, y, blur, spread, inset, color: color("#0f172a", a),
+  x, y, blur, spread, inset, color: color("#1e1242", a),
 })
 
 export const SHADOW_PRESETS: { name: string; layers: PresetLayer[] }[] = [

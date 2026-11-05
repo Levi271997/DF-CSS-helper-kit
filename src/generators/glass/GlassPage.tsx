@@ -17,7 +17,7 @@ const defaults = (): GlassSettings => ({
   shadow: true,
   shadowY: 10,
   shadowBlur: 40,
-  shadowColor: color("#0f172a", 0.2),
+  shadowColor: color("#1e1242", 0.2),
 })
 
 export default function GlassPage() {

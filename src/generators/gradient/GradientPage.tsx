@@ -16,8 +16,8 @@ const defaults = (): GradientSettings => ({
   posY: 50,
   repeating: false,
   stops: [
-    { id: newId(), color: color("#4f46e5"), pos: 0 },
-    { id: newId(), color: color("#db2777"), pos: 100 },
+    { id: newId(), color: color("#1e1242"), pos: 0 },
+    { id: newId(), color: color("#f8a02d"), pos: 100 },
   ],
 })
 

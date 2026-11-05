@@ -10,7 +10,7 @@ import { buildFilters, FILTER_DEFS, type FilterItem, type FiltersSettings } from
 const defaults = (): FiltersSettings => ({
   target: "filter",
   items: FILTER_DEFS.map((d) => ({ key: d.key, enabled: false, value: d.neutral })),
-  dropShadow: { enabled: false, x: 0, y: 8, blur: 16, color: color("#0f172a", 0.35) },
+  dropShadow: { enabled: false, x: 0, y: 8, blur: 16, color: color("#1e1242", 0.35) },
 })
 
 export default function FiltersPage() {

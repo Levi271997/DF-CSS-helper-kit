@@ -16,7 +16,7 @@ const defaults = (): Settings => ({
   linked: true,
   corners: { tl: 24, tr: 24, br: 24, bl: 24 },
   blob: { top: 30, right: 35, bottom: 60, left: 65 },
-  fill: color("#4f46e5"),
+  fill: color("#1e1242"),
 })
 
 const CORNERS: { key: Corner; label: string }[] = [

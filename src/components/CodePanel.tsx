@@ -59,7 +59,7 @@ export function CodePanel({ css, tool, settings }: Props) {
           </Button>
         </form>
       )}
-      <pre className="overflow-x-auto bg-slate-900 p-4 font-mono text-[13px] leading-relaxed text-slate-100">
+      <pre className="overflow-x-auto bg-brand-700 p-4 font-mono text-[13px] leading-relaxed text-slate-100">
         <code>{css}</code>
       </pre>
     </div>

@@ -22,11 +22,11 @@ export function ToolLayout({ title, description, tool, css, settings, preview, c
     <div className="mx-auto max-w-7xl space-y-6">
       <header className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight">{title}</h1>
+          <h1 className="text-2xl font-bold tracking-tight text-brand-600">{title}</h1>
           <p className="mt-1 text-sm text-slate-500">{description}</p>
         </div>
         {loadedSnippet && (
-          <span className="rounded-full bg-indigo-50 px-3 py-1 text-xs font-medium text-indigo-700">
+          <span className="rounded-full bg-brand-50 px-3 py-1 text-xs font-medium text-brand-700">
             Editing snippet: {loadedSnippet}
           </span>
         )}

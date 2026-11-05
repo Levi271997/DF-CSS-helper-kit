@@ -75,7 +75,7 @@ export function ColorPicker({ label, value, onChange, alpha = true }: Props) {
               aria-label={`Use ${c.name}`}
               onClick={() => onChange({ ...value, hex: c.hex })}
               className={`h-6 w-6 rounded-md border shadow-sm transition-transform hover:scale-110 ${
-                c.hex === value.hex ? "border-slate-900 ring-2 ring-indigo-500 ring-offset-1" : "border-slate-200"
+                c.hex === value.hex ? "border-brand-600 ring-2 ring-accent-400 ring-offset-1" : "border-slate-200"
               }`}
               style={{ background: c.hex }}
             />

@@ -5,9 +5,12 @@ import { store, useData } from "@/store"
 import { TOOLS } from "./tools"
 import ClientsPage from "./ClientsPage"
 
+// Sidebar is navy like the digitalfeet.com hero; the active page is marked in brand orange.
 const navClass = ({ isActive }: { isActive: boolean }) =>
-  `block rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
-    isActive ? "bg-indigo-50 text-indigo-700" : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+  `block rounded-lg border-l-2 px-3 py-2 text-sm font-medium transition-colors ${
+    isActive
+      ? "border-accent-400 bg-white/10 text-accent-400"
+      : "border-transparent text-white/70 hover:bg-white/5 hover:text-white"
   }`
 
 function ClientSwitcher() {
@@ -15,14 +18,14 @@ function ClientSwitcher() {
   const activeId = useData((d) => d.activeClientId)
   return (
     <div className="space-y-1.5">
-      <label htmlFor="client-switcher" className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+      <label htmlFor="client-switcher" className="text-xs font-semibold uppercase tracking-wide text-white/50">
         Client
       </label>
       <select
         id="client-switcher"
         value={activeId ?? ""}
         onChange={(e) => store.setActiveClient(e.target.value || null)}
-        className="w-full rounded-lg border border-slate-300 bg-white px-2.5 py-2 text-sm"
+        className="w-full rounded-lg border border-white/15 bg-white px-2.5 py-2 text-sm text-df-text"
       >
         <option value="">No client</option>
         {clients.map((c) => (
@@ -31,7 +34,7 @@ function ClientSwitcher() {
           </option>
         ))}
       </select>
-      <Link to="/clients" className="inline-block text-xs font-medium text-indigo-600 hover:underline">
+      <Link to="/clients" className="inline-block text-xs font-medium text-accent-400 hover:underline">
         Manage clients & snippets →
       </Link>
     </div>
@@ -40,10 +43,12 @@ function ClientSwitcher() {
 
 function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
   return (
-    <div className="flex h-full flex-col gap-6 p-4">
+    <div className="flex min-h-full flex-col gap-6 bg-brand-600 p-4 text-white">
       <Link to="/" onClick={onNavigate} className="flex items-center gap-2 px-1">
-        <img src="/favicon.svg" alt="" className="h-7 w-7" />
-        <span className="font-semibold tracking-tight">DF CSS Helper Kit</span>
+        <img src="/favicon.svg" alt="" className="h-8 w-8 rounded-lg ring-1 ring-white/15" />
+        <span className="font-heading text-[17px] font-bold leading-tight tracking-tight">
+          DF CSS <span className="text-accent-400">Helper Kit</span>
+        </span>
       </Link>
       <ClientSwitcher />
       <nav aria-label="Tools" className="space-y-0.5">
@@ -52,7 +57,7 @@ function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
             {t.label}
           </NavLink>
         ))}
-        <div className="my-2 border-t border-slate-200" />
+        <div className="my-2 border-t border-white/10" />
         <NavLink to="/clients" className={navClass} onClick={onNavigate}>
           Clients & snippets
         </NavLink>
@@ -70,22 +75,24 @@ function Shell() {
   return (
     <div className="min-h-screen lg:grid lg:grid-cols-[240px_minmax(0,1fr)]">
       {/* Desktop sidebar */}
-      <aside className="hidden border-r border-slate-200 bg-white lg:sticky lg:top-0 lg:block lg:h-screen lg:overflow-y-auto">
+      <aside className="hidden bg-brand-600 lg:sticky lg:top-0 lg:block lg:h-screen lg:overflow-y-auto">
         <Sidebar />
       </aside>
 
       {/* Mobile top bar + drawer */}
-      <div className="sticky top-0 z-30 flex items-center justify-between border-b border-slate-200 bg-white/90 px-4 py-3 backdrop-blur lg:hidden">
-        <Link to="/" className="flex items-center gap-2 font-semibold">
-          <img src="/favicon.svg" alt="" className="h-6 w-6" />
-          DF CSS Helper Kit
+      <div className="sticky top-0 z-30 flex items-center justify-between bg-brand-600 px-4 py-3 text-white lg:hidden">
+        <Link to="/" className="flex items-center gap-2 font-heading font-bold">
+          <img src="/favicon.svg" alt="" className="h-7 w-7 rounded-md ring-1 ring-white/15" />
+          <span>
+            DF CSS <span className="text-accent-400">Helper Kit</span>
+          </span>
         </Link>
         <button
           type="button"
           aria-label="Open menu"
           aria-expanded={menuOpen}
           onClick={() => setMenuOpen(true)}
-          className="rounded-lg p-2 text-slate-600 hover:bg-slate-100"
+          className="rounded-lg p-2 text-white/80 hover:bg-white/10"
         >
           <svg viewBox="0 0 20 20" className="h-5 w-5" fill="currentColor" aria-hidden>
             <path d="M3 5h14v2H3zM3 9h14v2H3zM3 13h14v2H3z" />
@@ -94,8 +101,8 @@ function Shell() {
       </div>
       {menuOpen && (
         <div className="fixed inset-0 z-40 lg:hidden" role="dialog" aria-modal="true" aria-label="Menu">
-          <div className="absolute inset-0 bg-slate-900/40" onClick={() => setMenuOpen(false)} />
-          <div className="absolute inset-y-0 left-0 w-72 max-w-[85vw] overflow-y-auto bg-white shadow-xl">
+          <div className="absolute inset-0 bg-brand-700/50" onClick={() => setMenuOpen(false)} />
+          <div className="absolute inset-y-0 left-0 w-72 max-w-[85vw] overflow-y-auto bg-brand-600 shadow-xl">
             <Sidebar onNavigate={() => setMenuOpen(false)} />
           </div>
         </div>

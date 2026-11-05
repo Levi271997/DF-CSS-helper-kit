@@ -44,7 +44,7 @@ export default function ClientsPage() {
     <div className="mx-auto max-w-5xl space-y-8">
       <header className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight">Clients</h1>
+          <h1 className="text-2xl font-bold tracking-tight text-brand-600">Clients</h1>
           <p className="mt-1 text-sm text-slate-500">
             Brand colors appear as quick picks in every color picker while a client is active. Data is stored in this browser — export to share with the team.
           </p>
@@ -106,7 +106,7 @@ export default function ClientsPage() {
 
 function ClientCard({ client, active, snippets }: { client: Client; active: boolean; snippets: Snippet[] }) {
     return (
-      <section className={`space-y-5 rounded-xl border bg-white p-5 ${active ? "border-indigo-300 ring-1 ring-indigo-200" : "border-slate-200"}`}>
+      <section className={`space-y-5 rounded-xl border bg-white p-5 ${active ? "border-brand-300 ring-1 ring-brand-200" : "border-slate-200"}`}>
         <div className="flex flex-wrap items-center justify-between gap-2">
           <input
             defaultValue={client.name}
@@ -116,7 +116,7 @@ function ClientCard({ client, active, snippets }: { client: Client; active: bool
           />
           <div className="flex gap-2">
             {active ? (
-              <span className="rounded-full bg-indigo-50 px-3 py-1 text-xs font-medium text-indigo-700">Active</span>
+              <span className="rounded-full bg-brand-50 px-3 py-1 text-xs font-medium text-brand-700">Active</span>
             ) : (
               <Button onClick={() => store.setActiveClient(client.id)}>Set active</Button>
             )}
@@ -192,7 +192,7 @@ function SnippetList({ snippets }: { snippets: Snippet[] }) {
               <div className="flex gap-1">
                 <Link
                   to={`${tool?.path ?? "/"}?snippet=${s.id}`}
-                  className="rounded-lg px-3 py-1.5 text-sm font-medium text-indigo-600 hover:bg-indigo-50"
+                  className="rounded-lg px-3 py-1.5 text-sm font-medium text-brand-600 hover:bg-brand-50"
                 >
                   Open
                 </Link>
@@ -239,7 +239,7 @@ function HexInput({ value, onCommit }: { value: string; onCommit: (hex: string) 
 }
 
 function AddColor({ clientId }: { clientId: string }) {
-  const [hex, setHex] = useState("#4f46e5")
+  const [hex, setHex] = useState("#f8a02d")
   const [name, setName] = useState("")
   return (
     <form
