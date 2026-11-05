@@ -8,11 +8,11 @@
  *   lavender #efe9ff / #e1d8ff / #f9f6fe  light surfaces
  *   purple #c10fff  secondary accent
  *   text   #1e293b, muted #67768e
- * Fonts: Ubuntu (headings), Inter (body).
+ * Fonts: Montserrat (headings), Poppins (body).
  */
 @theme {
-  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  --font-heading: "Ubuntu", "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Poppins", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-heading: "Montserrat", "Poppins", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
 
   --color-brand-50: #f9f6fe;

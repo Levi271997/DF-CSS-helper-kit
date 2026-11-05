@@ -106,7 +106,9 @@ function Shell() {
         </div>
       )}
 
-      <main className="min-w-0 px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
+      <main className="flex min-w-0 flex-col px-4 py-6 sm:px-6 lg:min-h-screen lg:px-8 lg:py-8">
+        {/* Wrapper stretches to full width; pages center themselves inside it */}
+        <div className="w-full">
         <Routes>
             <Route path="/" element={<Navigate to="/shadow" replace />} />
             {TOOLS.map((t) => (
@@ -116,6 +118,14 @@ function Shell() {
             <Route path="/clients" element={<ClientsPage />} />
             <Route path="*" element={<Navigate to="/shadow" replace />} />
         </Routes>
+        </div>
+
+        <footer className="mt-auto pt-10 text-center text-sm text-df-muted">
+          Created by <span className="font-medium text-brand-600">Levi</span> with{" "}
+          <span role="img" aria-label="love">
+            ❤️
+          </span>
+        </footer>
       </main>
     </div>
   )
