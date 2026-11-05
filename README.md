@@ -1,6 +1,6 @@
 # DF CSS Helper Kit
 
-Internal CSS generator for the Digitalfeet team. Build an effect with a client's
+Visual CSS generator for client work. Build an effect with a client's
 brand colors, copy the CSS, and save it as a snippet to reuse later.
 
 ## Tools
@@ -55,5 +55,9 @@ match. Add tests for new tools in `src/generators/build-css.test.ts`.
 
 ## Deploy
 
-Netlify: build command `npm run build`, publish directory `dist`
-(already set in `netlify.toml`). `public/_redirects` handles client-side routes.
+It's a single-page app, so the host must serve `index.html` for every route
+(otherwise typing or refreshing `/shadow` gives a 404). Both are configured:
+
+- **Vercel** (current): `vercel.json` rewrites all routes to `index.html`.
+  Vercel detects Vite automatically (build `npm run build`, output `dist`).
+- **Netlify**: `netlify.toml` sets the build; `public/_redirects` handles routes.
