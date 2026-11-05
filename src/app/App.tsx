@@ -45,7 +45,6 @@ function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
   return (
     <div className="flex min-h-full flex-col gap-6 bg-brand-600 p-4 text-white">
       <Link to="/" onClick={onNavigate} className="flex items-center gap-2 px-1">
-        <img src="/favicon.svg" alt="" className="h-8 w-8 rounded-lg ring-1 ring-white/15" />
         <span className="font-heading text-[17px] font-bold leading-tight tracking-tight">
           DF CSS <span className="text-accent-400">Helper Kit</span>
         </span>
@@ -82,7 +81,6 @@ function Shell() {
       {/* Mobile top bar + drawer */}
       <div className="sticky top-0 z-30 flex items-center justify-between bg-brand-600 px-4 py-3 text-white lg:hidden">
         <Link to="/" className="flex items-center gap-2 font-heading font-bold">
-          <img src="/favicon.svg" alt="" className="h-7 w-7 rounded-md ring-1 ring-white/15" />
           <span>
             DF CSS <span className="text-accent-400">Helper Kit</span>
           </span>
