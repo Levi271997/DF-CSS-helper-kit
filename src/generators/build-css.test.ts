@@ -6,6 +6,7 @@ import { buildFilters, type FiltersSettings } from "./filters/build-css"
 import { buildGradient, nextStopPos, type GradientSettings } from "./gradient/build-css"
 import { buildClip, insertIndex } from "./clip-path/build-css"
 import { buildTransform, TRANSFORM_DEFAULTS } from "./transform/build-css"
+import { buildGridCss, buildGridHtml, collides, fitItems, rectFromCells, type GridSettings } from "./grid/build-css"
 import { blobValue, buildRadius, randomBlob, type RadiusSettings } from "./radius/build-css"
 
 const layer = (p: Partial<ShadowLayer>): ShadowLayer => ({
@@ -146,5 +147,34 @@ describe("radius", () => {
   it("random blobs stay within 20–80", () => {
     expect(randomBlob(() => 0)).toEqual({ top: 20, right: 20, bottom: 20, left: 20 })
     expect(randomBlob(() => 1)).toEqual({ top: 80, right: 80, bottom: 80, left: 80 })
+  })
+})
+
+describe("grid", () => {
+  const base: GridSettings = {
+    columns: 4, rows: 3, columnGap: 8, rowGap: 8, columnSize: "1fr", rowSize: "1fr",
+    parentClass: "parent", itemPrefix: "div",
+    items: [{ id: "a", col: 2, row: 1, colSpan: 2, rowSpan: 2 }],
+  }
+
+  it("writes container and item rules", () => {
+    const css = buildGridCss(base)
+    expect(css).toContain("grid-template-columns: repeat(4, 1fr);")
+    expect(css).toContain("gap: 8px;")
+    expect(css).toContain(".div1 {\n  grid-area: 1 / 2 / 3 / 4;\n}")
+    expect(buildGridCss({ ...base, rowGap: 4 })).toContain("gap: 4px 8px;")
+    expect(buildGridHtml(base)).toBe('<div class="parent">\n  <div class="div1">1</div>\n</div>')
+  })
+
+  it("normalises drags and detects collisions", () => {
+    const r = rectFromCells({ col: 3, row: 3 }, { col: 1, row: 2 })
+    expect(r).toEqual({ col: 1, row: 2, colSpan: 3, rowSpan: 2 })
+    expect(collides(r, base.items)).toBe(true)
+    expect(collides({ col: 1, row: 3, colSpan: 1, rowSpan: 1 }, base.items)).toBe(false)
+  })
+
+  it("trims items when the grid shrinks", () => {
+    expect(fitItems(base.items, 2, 1)).toEqual([{ id: "a", col: 2, row: 1, colSpan: 1, rowSpan: 1 }])
+    expect(fitItems(base.items, 1, 3)).toEqual([])
   })
 })
