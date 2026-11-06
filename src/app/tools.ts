@@ -8,6 +8,7 @@ import ClipPathPage from "@/generators/clip-path/ClipPathPage"
 import TransformPage from "@/generators/transform/TransformPage"
 import RadiusPage from "@/generators/radius/RadiusPage"
 import GridPage from "@/generators/grid/GridPage"
+import FlexboxPage from "@/generators/flexbox/FlexboxPage"
 
 // Pages are small (~30 KB combined), so they're bundled up front — no loading flash.
 export const TOOLS: { id: ToolId; path: string; label: string; page: ComponentType }[] = [
@@ -19,4 +20,5 @@ export const TOOLS: { id: ToolId; path: string; label: string; page: ComponentTy
   { id: "transform", path: "/transform", label: "Transforms", page: TransformPage },
   { id: "radius", path: "/radius", label: "Border radius", page: RadiusPage },
   { id: "grid", path: "/grid", label: "CSS grid", page: GridPage },
+  { id: "flexbox", path: "/flexbox", label: "Flexbox", page: FlexboxPage },
 ]

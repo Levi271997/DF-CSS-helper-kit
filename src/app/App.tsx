@@ -121,10 +121,11 @@ function Shell() {
         </div>
 
         <footer className="mt-auto pt-10 text-center text-sm text-df-muted">
-          Created by <span className="font-medium text-brand-600">Levi</span> with{" "}
+          Created with{" "}
           <span role="img" aria-label="love">
             ❤️
-          </span>
+          </span>{" "}
+          by <span className="font-medium text-brand-600">Levi</span>
         </footer>
       </main>
     </div>

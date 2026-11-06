@@ -1,9 +1,8 @@
-import { useEffect, useId, useMemo, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { ToolLayout } from "@/components/ToolLayout"
-import { Button, Section, Slider } from "@/components/controls"
-import { useToast } from "@/components/Toast"
+import { Button, Section, Slider, TextField } from "@/components/controls"
+import { HtmlPanel } from "@/components/HtmlPanel"
 import { useToolState } from "@/components/useToolState"
-import { copyText } from "@/lib/clipboard"
 import { newId } from "@/lib/id"
 import {
   areaValue,
@@ -40,28 +39,9 @@ function cellAt(x: number, y: number): Cell | null {
   return { col, row }
 }
 
-function TextField({ label, value, onChange, placeholder }: { label: string; value: string; onChange: (v: string) => void; placeholder?: string }) {
-  const id = useId()
-  return (
-    <div className="space-y-1.5">
-      <label htmlFor={id} className="text-sm text-slate-700">
-        {label}
-      </label>
-      <input
-        id={id}
-        value={value}
-        placeholder={placeholder}
-        onChange={(e) => onChange(e.target.value)}
-        className="w-full rounded-md border border-slate-200 bg-white px-2.5 py-1.5 font-mono text-sm text-slate-700"
-      />
-    </div>
-  )
-}
-
 export default function GridPage() {
   const { state, update, reset, loadedSnippet } = useToolState("grid", defaults)
   const [drag, setDrag] = useState<Drag | null>(null)
-  const toast = useToast()
 
   const css = useMemo(() => buildGridCss(state), [state])
   const html = useMemo(() => buildGridHtml(state), [state])
@@ -122,11 +102,6 @@ export default function GridPage() {
   const cells: Cell[] = []
   for (let row = 1; row <= state.rows; row++) for (let col = 1; col <= state.columns; col++) cells.push({ col, row })
 
-  const copyHtml = async () => {
-    const ok = await copyText(html)
-    toast(ok ? "HTML copied to clipboard" : "Couldn't copy — select the code and copy it manually", ok ? "ok" : "error")
-  }
-
   return (
     <ToolLayout
       title="CSS grid"
@@ -139,7 +114,7 @@ export default function GridPage() {
       preview={
         <div className="overflow-auto rounded-xl border border-slate-200 bg-slate-50 p-4">
           <div
-            className={`relative grid h-[420px] min-w-[320px] select-none touch-none ${drag ? "cursor-crosshair" : ""}`}
+            className={`relative grid h-105 min-w-[320px] select-none touch-none ${drag ? "cursor-crosshair" : ""}`}
             style={gridStyle}
           >
             {cells.map((c) => (
@@ -205,19 +180,7 @@ export default function GridPage() {
           </div>
         </div>
       }
-      below={
-        <div className="overflow-hidden rounded-xl border border-slate-200 bg-white">
-          <div className="flex items-center justify-between gap-2 border-b border-slate-200 px-4 py-2.5">
-            <span className="text-sm font-semibold text-slate-700">HTML</span>
-            <Button variant="primary" onClick={copyHtml}>
-              Copy HTML
-            </Button>
-          </div>
-          <pre className="overflow-x-auto bg-brand-700 p-4 font-mono text-[13px] leading-relaxed text-slate-100">
-            <code>{html}</code>
-          </pre>
-        </div>
-      }
+      below={<HtmlPanel html={html} />}
       controls={
         <>
           <Section title="Tracks">

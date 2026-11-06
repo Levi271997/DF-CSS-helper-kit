@@ -7,6 +7,7 @@ import { buildGradient, nextStopPos, type GradientSettings } from "./gradient/bu
 import { buildClip, insertIndex } from "./clip-path/build-css"
 import { buildTransform, TRANSFORM_DEFAULTS } from "./transform/build-css"
 import { buildGridCss, buildGridHtml, collides, fitItems, rectFromCells, type GridSettings } from "./grid/build-css"
+import { buildFlexCss, buildFlexHtml, newFlexItem, type FlexSettings } from "./flexbox/build-css"
 import { blobValue, buildRadius, randomBlob, type RadiusSettings } from "./radius/build-css"
 
 const layer = (p: Partial<ShadowLayer>): ShadowLayer => ({
@@ -176,5 +177,27 @@ describe("grid", () => {
   it("trims items when the grid shrinks", () => {
     expect(fitItems(base.items, 2, 1)).toEqual([{ id: "a", col: 2, row: 1, colSpan: 1, rowSpan: 1 }])
     expect(fitItems(base.items, 1, 3)).toEqual([])
+  })
+})
+
+describe("flexbox", () => {
+  const base: FlexSettings = {
+    direction: "row", wrap: "nowrap", justify: "flex-start", alignItems: "stretch", alignContent: "center",
+    rowGap: 0, columnGap: 0, parentClass: "parent", itemPrefix: "child",
+    items: [newFlexItem("a"), { ...newFlexItem("b"), grow: 1, basis: "120px", alignSelf: "center", order: 2 }],
+  }
+
+  it("omits defaults and align-content without wrap", () => {
+    expect(buildFlexCss(base)).toBe(
+      ".parent {\n  display: flex;\n}\n\n.child2 {\n  flex: 1 1 120px;\n  align-self: center;\n  order: 2;\n}",
+    )
+  })
+
+  it("writes container settings", () => {
+    const css = buildFlexCss({ ...base, direction: "column", wrap: "wrap", justify: "space-between", rowGap: 8, columnGap: 16 })
+    expect(css).toContain("flex-direction: column;")
+    expect(css).toContain("align-content: center;")
+    expect(css).toContain("gap: 8px 16px;")
+    expect(buildFlexHtml(base)).toBe('<div class="parent">\n  <div class="child1">1</div>\n  <div class="child2">2</div>\n</div>')
   })
 })
