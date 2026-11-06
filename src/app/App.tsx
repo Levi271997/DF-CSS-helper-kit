@@ -7,7 +7,7 @@ import ClientsPage from "./ClientsPage"
 
 // Sidebar is navy like the digitalfeet.com hero; the active page is marked in brand orange.
 const navClass = ({ isActive }: { isActive: boolean }) =>
-  `block rounded-lg border-l-2 px-3 py-2 text-sm font-medium transition-colors ${
+  `block border-l-2 px-3 py-2 text-sm font-medium transition-colors ${
     isActive
       ? "border-accent-400 bg-white/10 text-accent-400"
       : "border-transparent text-white/70 hover:bg-white/5 hover:text-white"
