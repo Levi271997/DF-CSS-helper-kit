@@ -5,6 +5,7 @@ import TextShadowPage from "@/generators/text-shadow/TextShadowPage"
 import FluidTypePage from "@/generators/fluid-type/FluidTypePage"
 import ButtonPage from "@/generators/button/ButtonPage"
 import AnimationPage from "@/generators/animation/AnimationPage"
+import EasingPage from "@/generators/easing/EasingPage"
 import GlassPage from "@/generators/glass/GlassPage"
 import FiltersPage from "@/generators/filters/FiltersPage"
 import GradientPage from "@/generators/gradient/GradientPage"
@@ -22,6 +23,7 @@ export const TOOLS: { id: ToolId; path: string; label: string; page: ComponentTy
   { id: "fluid-type", path: "/fluid-type", label: "Fluid typography", page: FluidTypePage },
   { id: "button", path: "/button", label: "Button builder", page: ButtonPage },
   { id: "animation", path: "/animation", label: "Animations", page: AnimationPage },
+  { id: "easing", path: "/easing", label: "Easing curve", page: EasingPage },
   { id: "glass", path: "/glass", label: "Glassmorphism", page: GlassPage },
   { id: "filters", path: "/filters", label: "Filters", page: FiltersPage },
   { id: "gradient", path: "/gradient", label: "Gradients", page: GradientPage },

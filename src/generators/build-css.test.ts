@@ -13,6 +13,7 @@ import { buildTextShadow, longShadow, type TextShadowLayer, type TextShadowSetti
 import { buildFluidCss, clampValue, scaleSteps, sizeAt } from "./fluid-type/build-css"
 import { buildButtonCss, buildButtonHtml, type ButtonSettings } from "./button/build-css"
 import { PRESET_IDS, animationValue, buildAnimationCss, type AnimationSettings } from "./animation/build-css"
+import { buildEasingCss, parseBezier, type EasingSettings } from "./easing/build-css"
 import { blobValue, buildRadius, randomBlob, type RadiusSettings } from "./radius/build-css"
 
 const layer = (p: Partial<ShadowLayer>): ShadowLayer => ({
@@ -334,5 +335,25 @@ describe("animation", () => {
   it("adds a reduced-motion override and builds every preset", () => {
     expect(buildAnimationCss({ ...base, reducedMotion: true })).toContain("@media (prefers-reduced-motion: reduce) {\n  .animate {\n    animation: none;")
     for (const id of PRESET_IDS) expect(buildAnimationCss({ ...base, preset: id, name: id })).toContain(`@keyframes ${id} {`)
+  })
+})
+
+describe("easing", () => {
+  const base: EasingSettings = { curve: [0.16, 1, 0.3, 1], duration: 1000, compare: "none", output: "property", variableName: "ease-out-expo" }
+
+  it("outputs properties, a variable or the bare value", () => {
+    expect(buildEasingCss(base)).toBe(
+      "transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);\nanimation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);",
+    )
+    expect(buildEasingCss({ ...base, output: "variable" })).toBe(":root {\n  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);\n}")
+    expect(buildEasingCss({ ...base, output: "value" })).toBe("cubic-bezier(0.16, 1, 0.3, 1)")
+  })
+
+  it("parses pasted curves and keeps x within 0–1", () => {
+    expect(parseBezier("cubic-bezier(0.4, 0, 0.2, 1);")).toEqual([0.4, 0, 0.2, 1])
+    expect(parseBezier(".68 -.6 .32 1.6")).toEqual([0.68, -0.6, 0.32, 1.6])
+    expect(parseBezier("1.5, 3, -1, 0")).toEqual([1, 2, 0, 0])
+    expect(parseBezier("ease")).toBeNull()
+    expect(parseBezier("0, 0, 1")).toBeNull()
   })
 })
