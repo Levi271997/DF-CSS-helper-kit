@@ -174,7 +174,8 @@ export function Select<T extends string>({
 }: {
   label: string
   value: T
-  options: readonly T[]
+  /** Plain values, or `{ value, label }` when the shown text should differ. */
+  options: readonly (T | { value: T; label: string })[]
   onChange: (value: T) => void
 }) {
   const id = useId()
@@ -189,11 +190,14 @@ export function Select<T extends string>({
         onChange={(e) => onChange(e.target.value as T)}
         className="w-full rounded-md border border-slate-200 bg-white px-2 py-1.5 font-mono text-sm text-slate-700"
       >
-        {options.map((o) => (
-          <option key={o} value={o}>
-            {o}
-          </option>
-        ))}
+        {options.map((o) => {
+          const opt = typeof o === "string" ? { value: o, label: o } : o
+          return (
+            <option key={opt.value} value={opt.value}>
+              {opt.label}
+            </option>
+          )
+        })}
       </select>
     </div>
   )

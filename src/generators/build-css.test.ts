@@ -10,6 +10,7 @@ import { buildGridCss, buildGridHtml, collides, fitItems, rectFromCells, type Gr
 import { buildFlexCss, buildFlexHtml, newFlexItem, type FlexSettings } from "./flexbox/build-css"
 import { buildBackground, positionValue, type BackgroundSettings } from "./background/build-css"
 import { buildTextShadow, longShadow, type TextShadowLayer, type TextShadowSettings } from "./text-shadow/build-css"
+import { buildFluidCss, clampValue, scaleSteps, sizeAt } from "./fluid-type/build-css"
 import { blobValue, buildRadius, randomBlob, type RadiusSettings } from "./radius/build-css"
 
 const layer = (p: Partial<ShadowLayer>): ShadowLayer => ({
@@ -250,5 +251,27 @@ describe("text shadow", () => {
   it("builds a stepped long shadow", () => {
     const layers = longShadow(3, "#000")
     expect(layers.map((l) => [l.x, l.y, l.blur])).toEqual([[1, 1, 0], [2, 2, 0], [3, 3, 0]])
+  })
+})
+
+describe("fluid type", () => {
+  it("builds a clamp that hits both sizes", () => {
+    expect(clampValue(16, 24, 320, 1280, "rem", 16)).toBe("clamp(1rem, 0.8333rem + 0.8333vw, 1.5rem)")
+    expect(clampValue(16, 24, 320, 1280, "px", 16)).toBe("clamp(16px, 13.3333px + 0.8333vw, 24px)")
+    expect(sizeAt(16, 24, 320, 1280, 800)).toBeCloseTo(20)
+    expect(sizeAt(16, 24, 320, 1280, 100)).toBe(16)
+    expect(sizeAt(16, 24, 320, 1280, 2000)).toBe(24)
+  })
+
+  it("handles shrinking sizes and bad ranges", () => {
+    expect(clampValue(24, 16, 320, 1280, "px", 16)).toBe("clamp(16px, 26.6667px - 0.8333vw, 24px)")
+    expect(clampValue(16, 24, 800, 800, "rem", 16)).toBe("1rem")
+  })
+
+  it("names scale steps from largest to smallest", () => {
+    const s = { mode: "scale", unit: "rem", root: 16, minVw: 320, maxVw: 1280, minSize: 16, maxSize: 24, baseMin: 16, baseMax: 18,
+      ratioMin: "1.2", ratioMax: "1.25", stepsDown: 1, stepsUp: 1, prefix: "step", previewVw: 800, text: "" } as const
+    expect(scaleSteps(s).map((st) => st.name)).toEqual(["--step-1", "--step-0", "--step--1"])
+    expect(buildFluidCss(s)).toContain("  --step-0: clamp(1rem, 0.9583rem + 0.2083vw, 1.125rem);")
   })
 })
