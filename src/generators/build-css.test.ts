@@ -11,6 +11,7 @@ import { buildFlexCss, buildFlexHtml, newFlexItem, type FlexSettings } from "./f
 import { buildBackground, positionValue, type BackgroundSettings } from "./background/build-css"
 import { buildTextShadow, longShadow, type TextShadowLayer, type TextShadowSettings } from "./text-shadow/build-css"
 import { buildFluidCss, clampValue, scaleSteps, sizeAt } from "./fluid-type/build-css"
+import { buildButtonCss, buildButtonHtml, type ButtonSettings } from "./button/build-css"
 import { blobValue, buildRadius, randomBlob, type RadiusSettings } from "./radius/build-css"
 
 const layer = (p: Partial<ShadowLayer>): ShadowLayer => ({
@@ -273,5 +274,40 @@ describe("fluid type", () => {
       ratioMin: "1.2", ratioMax: "1.25", stepsDown: 1, stepsUp: 1, prefix: "step", previewVw: 800, text: "" } as const
     expect(scaleSteps(s).map((st) => st.name)).toEqual(["--step-1", "--step-0", "--step--1"])
     expect(buildFluidCss(s)).toContain("  --step-0: clamp(1rem, 0.9583rem + 0.2083vw, 1.125rem);")
+  })
+})
+
+describe("button", () => {
+  const base: ButtonSettings = {
+    label: "Go & <win>", className: "btn primary", fontFamily: "inherit", fontSize: 16, fontWeight: 600, letterSpacing: 0,
+    uppercase: false, paddingY: 12, paddingX: 24, radius: 8, borderWidth: 0,
+    normal: { background: color("#f8a02d"), text: color("#1e1242"), border: color("#f8a02d") },
+    hover: { background: color("#f37920"), text: color("#1e1242"), border: color("#f37920") },
+    shadow: false, shadowY: 4, shadowBlur: 12, shadowColor: color("#000", 0.2), lift: 0, press: false,
+    focusColor: color("#4b3b8c"), duration: 0,
+  }
+
+  it("writes base, hover and focus rules with a safe class name", () => {
+    const css = buildButtonCss(base)
+    expect(css).toContain(".btn-primary {\n  display: inline-flex;")
+    expect(css).toContain("  padding: 12px 24px;")
+    expect(css).toContain("  border: none;")
+    expect(css).toContain(".btn-primary:hover {\n  color: #1e1242;\n  background-color: #f37920;\n}")
+    expect(css).toContain(".btn-primary:focus-visible {\n  outline: 2px solid #4b3b8c;")
+    expect(css).not.toContain("transition")
+    expect(css).not.toContain(":active")
+  })
+
+  it("adds lift, shadow, press and transition when enabled", () => {
+    const css = buildButtonCss({ ...base, borderWidth: 2, shadow: true, lift: 2, press: true, duration: 200, uppercase: true })
+    expect(css).toContain("  border: 2px solid #f8a02d;")
+    expect(css).toContain("  transform: translateY(-2px);\n  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);")
+    expect(css).toContain(".btn-primary:active {")
+    expect(css).toContain("  text-transform: uppercase;")
+    expect(css).toContain("transition: color 200ms ease,")
+  })
+
+  it("escapes the label in HTML", () => {
+    expect(buildButtonHtml(base)).toBe('<a href="#" class="btn-primary">Go &amp; &lt;win></a>')
   })
 })
