@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest"
-import { color, hexToRgb, isValidHex, normalizeHex, toCss } from "./color"
+import { color, hexToHsl, hexToRgb, hslToHex, isValidHex, normalizeHex, toCss } from "./color"
 import { declsToCss, declsToStyle, toCamel } from "./css"
 
 describe("color", () => {
@@ -42,5 +42,14 @@ describe("css", () => {
 
   it("builds a style object", () => {
     expect(declsToStyle([["border-radius", "4px"]])).toEqual({ borderRadius: "4px" })
+  })
+})
+
+describe("hsl and contrast helpers", () => {
+  it("round-trips hex through hsl", () => {
+    for (const hex of ["#f8a02d", "#1e1242", "#ffffff", "#000000", "#4b3b8c"]) {
+      const { h, s, l } = hexToHsl(hex)
+      expect(hslToHex(h, s, l)).toBe(hex)
+    }
   })
 })

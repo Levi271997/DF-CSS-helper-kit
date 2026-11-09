@@ -15,6 +15,7 @@ import RadiusPage from "@/generators/radius/RadiusPage"
 import GridPage from "@/generators/grid/GridPage"
 import FlexboxPage from "@/generators/flexbox/FlexboxPage"
 import BackgroundPage from "@/generators/background/BackgroundPage"
+import PalettePage from "@/generators/palette/PalettePage"
 
 // Pages are small (~30 KB combined), so they're bundled up front — no loading flash.
 export const TOOLS: { id: ToolId; path: string; label: string; page: ComponentType }[] = [
@@ -33,4 +34,5 @@ export const TOOLS: { id: ToolId; path: string; label: string; page: ComponentTy
   { id: "grid", path: "/grid", label: "CSS grid", page: GridPage },
   { id: "flexbox", path: "/flexbox", label: "Flexbox", page: FlexboxPage },
   { id: "background", path: "/background", label: "Background", page: BackgroundPage },
+  { id: "palette", path: "/palette", label: "Colour palette", page: PalettePage },
 ]

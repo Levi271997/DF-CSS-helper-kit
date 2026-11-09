@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest"
-import { color } from "@/lib/color"
+import { color, hexToHsl } from "@/lib/color"
 import { buildShadow, type ShadowLayer } from "./shadow/build-css"
 import { buildGlass, type GlassSettings } from "./glass/build-css"
 import { buildFilters, type FiltersSettings } from "./filters/build-css"
@@ -14,6 +14,7 @@ import { buildFluidCss, clampValue, scaleSteps, sizeAt } from "./fluid-type/buil
 import { buildButtonCss, buildButtonHtml, type ButtonSettings } from "./button/build-css"
 import { PRESET_IDS, animationValue, buildAnimationCss, type AnimationSettings } from "./animation/build-css"
 import { buildEasingCss, parseBezier, type EasingSettings } from "./easing/build-css"
+import { buildPaletteCss, buildShades, checkContrast } from "./palette/build-css"
 import { blobValue, buildRadius, randomBlob, type RadiusSettings } from "./radius/build-css"
 
 const layer = (p: Partial<ShadowLayer>): ShadowLayer => ({
@@ -355,5 +356,29 @@ describe("easing", () => {
     expect(parseBezier("1.5, 3, -1, 0")).toEqual([1, 2, 0, 0])
     expect(parseBezier("ease")).toBeNull()
     expect(parseBezier("0, 0, 1")).toBeNull()
+  })
+})
+
+describe("palette", () => {
+  it("builds 11 shades that pass through the base colour, light to dark", () => {
+    const shades = buildShades("#f8a02d")
+    expect(shades.map((s) => s.step)).toEqual([50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950])
+    expect(shades.filter((s) => s.isBase).map((s) => s.hex)).toEqual(["#f8a02d"])
+    const l = shades.map((s) => hexToHsl(s.hex).l)
+    for (let i = 1; i < l.length; i++) expect(l[i]).toBeLessThan(l[i - 1])
+  })
+
+  it("exports CSS variables", () => {
+    const css = buildPaletteCss({ base: "#1e1242", name: "navy", format: "hex", text: "#000", background: "#fff" })
+    expect(css.startsWith(":root {\n  --navy-50: #")).toBe(true)
+    expect(css).toContain("#1e1242;")
+  })
+
+  it("checks WCAG contrast", () => {
+    expect(checkContrast("#000000", "#ffffff")).toEqual({ ratio: 21, aaNormal: true, aaLarge: true, aaaNormal: true, aaaLarge: true })
+    const mid = checkContrast("#777777", "#ffffff")
+    expect(mid.ratio).toBeCloseTo(4.48, 1)
+    expect(mid.aaNormal).toBe(false)
+    expect(mid.aaLarge).toBe(true)
   })
 })
