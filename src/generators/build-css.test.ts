@@ -12,6 +12,7 @@ import { buildBackground, positionValue, type BackgroundSettings } from "./backg
 import { buildTextShadow, longShadow, type TextShadowLayer, type TextShadowSettings } from "./text-shadow/build-css"
 import { buildFluidCss, clampValue, scaleSteps, sizeAt } from "./fluid-type/build-css"
 import { buildButtonCss, buildButtonHtml, type ButtonSettings } from "./button/build-css"
+import { PRESET_IDS, animationValue, buildAnimationCss, type AnimationSettings } from "./animation/build-css"
 import { blobValue, buildRadius, randomBlob, type RadiusSettings } from "./radius/build-css"
 
 const layer = (p: Partial<ShadowLayer>): ShadowLayer => ({
@@ -309,5 +310,29 @@ describe("button", () => {
 
   it("escapes the label in HTML", () => {
     expect(buildButtonHtml(base)).toBe('<a href="#" class="btn-primary">Go &amp; &lt;win></a>')
+  })
+})
+
+describe("animation", () => {
+  const base: AnimationSettings = {
+    preset: "slide-in-up", name: "slide-in-up", className: "animate", distance: 40, scale: 1.1, duration: 700, delay: 0,
+    easing: "ease-out", infinite: false, iterations: 1, direction: "normal", fill: "both", reducedMotion: false,
+  }
+
+  it("writes keyframes and a compact shorthand", () => {
+    expect(buildAnimationCss(base)).toBe(
+      "@keyframes slide-in-up {\n  from {\n    opacity: 0;\n    transform: translateY(40px);\n  }\n  to {\n    opacity: 1;\n    transform: translateY(0);\n  }\n}\n\n" +
+        ".animate {\n  animation: slide-in-up 700ms ease-out both;\n}",
+    )
+  })
+
+  it("includes delay, repeats and direction only when set", () => {
+    expect(animationValue({ ...base, delay: 200, infinite: true, direction: "alternate", fill: "none" }, "x")).toBe("x 700ms ease-out 200ms infinite alternate")
+    expect(animationValue({ ...base, iterations: 3, fill: "none" }, "x")).toBe("x 700ms ease-out 3")
+  })
+
+  it("adds a reduced-motion override and builds every preset", () => {
+    expect(buildAnimationCss({ ...base, reducedMotion: true })).toContain("@media (prefers-reduced-motion: reduce) {\n  .animate {\n    animation: none;")
+    for (const id of PRESET_IDS) expect(buildAnimationCss({ ...base, preset: id, name: id })).toContain(`@keyframes ${id} {`)
   })
 })
