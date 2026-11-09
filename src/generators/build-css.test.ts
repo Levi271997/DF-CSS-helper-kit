@@ -17,6 +17,7 @@ import { buildEasingCss, parseBezier, type EasingSettings } from "./easing/build
 import { buildPaletteCss, buildShades, checkContrast } from "./palette/build-css"
 import { buildTokens, buildVariablesCss, uniqueNames, type VariablesSettings } from "./variables/build-css"
 import { buildBorder, type BorderSettings, type Side as BorderSide } from "./border/build-css"
+import { buildScrollbarCss, type ScrollbarSettings } from "./scrollbar/build-css"
 import { blobValue, buildRadius, randomBlob, type RadiusSettings } from "./radius/build-css"
 
 const layer = (p: Partial<ShadowLayer>): ShadowLayer => ({
@@ -437,5 +438,26 @@ describe("border", () => {
       ["outline", "2px dashed #f8a02d"],
       ["outline-offset", "4px"],
     ])
+  })
+})
+
+describe("scrollbar", () => {
+  const base: ScrollbarSettings = {
+    target: "page", className: "scroll-area", size: 12, radius: 999, padding: 3,
+    track: color("#f1f5f9"), thumb: color("#1e1242"), thumbHover: color("#f8a02d"),
+  }
+
+  it("targets the whole page with webkit rules and a guarded Firefox fallback", () => {
+    const css = buildScrollbarCss(base)
+    expect(css.startsWith("/* Chrome, Edge, Safari */\n\n::-webkit-scrollbar {\n  width: 12px;")).toBe(true)
+    expect(css).toContain("::-webkit-scrollbar-thumb {\n  background: #1e1242;\n  border-radius: 999px;\n  border: 3px solid #f1f5f9;\n}")
+    expect(css).toContain("@supports not selector(::-webkit-scrollbar) {\n  html {\n    scrollbar-width: auto;\n    scrollbar-color: #1e1242 #f1f5f9;")
+  })
+
+  it("scopes to a class, uses thin in Firefox, and caps the thumb gap", () => {
+    const css = buildScrollbarCss({ ...base, target: "element", className: ".my box", size: 8, padding: 10 })
+    expect(css).toContain(".my-box::-webkit-scrollbar-thumb:hover {")
+    expect(css).toContain("  .my-box {\n    scrollbar-width: thin;")
+    expect(css).toContain("border: 3px solid")
   })
 })
