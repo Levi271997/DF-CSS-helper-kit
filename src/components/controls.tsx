@@ -100,7 +100,7 @@ export function Toggle({
         type="checkbox"
         checked={checked}
         onChange={(e) => onChange(e.target.checked)}
-        className="h-4 w-4 rounded border-slate-300 accent-accent-500"
+        className="h-4 w-4 rounded border-slate-300 accent-indigo-600"
       />
       {label}
     </label>

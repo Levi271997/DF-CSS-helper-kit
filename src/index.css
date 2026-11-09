@@ -73,7 +73,7 @@ input[type="range"]:focus-visible {
 }
 
 input[type="checkbox"] {
-  accent-color: var(--color-accent-500);
+  accent-color: var(--color-indigo-600);
 }
 
 input[type="color"] {
