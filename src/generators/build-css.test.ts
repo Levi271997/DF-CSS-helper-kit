@@ -15,6 +15,7 @@ import { buildButtonCss, buildButtonHtml, type ButtonSettings } from "./button/b
 import { PRESET_IDS, animationValue, buildAnimationCss, type AnimationSettings } from "./animation/build-css"
 import { buildEasingCss, parseBezier, type EasingSettings } from "./easing/build-css"
 import { buildPaletteCss, buildShades, checkContrast } from "./palette/build-css"
+import { buildTokens, buildVariablesCss, uniqueNames, type VariablesSettings } from "./variables/build-css"
 import { blobValue, buildRadius, randomBlob, type RadiusSettings } from "./radius/build-css"
 
 const layer = (p: Partial<ShadowLayer>): ShadowLayer => ({
@@ -380,5 +381,33 @@ describe("palette", () => {
     expect(mid.ratio).toBeCloseTo(4.48, 1)
     expect(mid.aaNormal).toBe(false)
     expect(mid.aaLarge).toBe(true)
+  })
+})
+
+describe("css variables", () => {
+  const base: VariablesSettings = {
+    prefix: "Brand", useClientColors: true, colors: [{ id: "x", name: "Primary", value: "#ABC" }],
+    fonts: [{ id: "f", name: "heading", value: "'Montserrat', sans-serif" }, { id: "g", name: "empty", value: " " }],
+    includeSpacing: true, spaceBase: 16, includeRadius: false, radius: { sm: 4, md: 8, lg: 16 }, unit: "rem",
+  }
+
+  it("names client and custom colours uniquely", () => {
+    const g = buildTokens(base, [{ name: "Primary", hex: "#f8a02d" }, { name: "Dark Navy!", hex: "#1e1242" }])
+    expect(g.colors).toEqual([
+      { name: "--brand-primary", value: "#f8a02d" },
+      { name: "--brand-dark-navy", value: "#1e1242" },
+      { name: "--brand-primary-2", value: "#aabbcc" },
+    ])
+    expect(g.fonts).toEqual([{ name: "--brand-font-heading", value: "'Montserrat', sans-serif" }])
+    expect(g.spacing[0]).toEqual({ name: "--brand-space-2xs", value: "0.25rem" })
+    expect(g.radius).toEqual([])
+  })
+
+  it("skips client colours when off and writes grouped CSS", () => {
+    const css = buildVariablesCss(buildTokens({ ...base, useClientColors: false, unit: "px" }, [{ name: "x", hex: "#000" }]))
+    expect(css).toContain(":root {\n  /* Colours */\n  --brand-primary: #aabbcc;")
+    expect(css).toContain("  --brand-space-md: 32px;")
+    expect(css).not.toContain("--brand-x")
+    expect(uniqueNames(["", "a", "A"], "color")).toEqual(["color-1", "a", "a-2"])
   })
 })

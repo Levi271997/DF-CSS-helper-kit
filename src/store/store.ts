@@ -1,9 +1,9 @@
 import { newId } from "@/lib/id"
 import { normalizeHex } from "@/lib/color"
 
-export type ToolId = "shadow" | "glass" | "filters" | "gradient" | "clip-path" | "transform" | "radius" | "grid" | "flexbox" | "background" | "text-shadow" | "fluid-type" | "button" | "animation" | "easing" | "palette"
+export type ToolId = "shadow" | "glass" | "filters" | "gradient" | "clip-path" | "transform" | "radius" | "grid" | "flexbox" | "background" | "text-shadow" | "fluid-type" | "button" | "animation" | "easing" | "palette" | "variables"
 
-export const TOOL_IDS: ToolId[] = ["shadow", "glass", "filters", "gradient", "clip-path", "transform", "radius", "grid", "flexbox", "background", "text-shadow", "fluid-type", "button", "animation", "easing", "palette"]
+export const TOOL_IDS: ToolId[] = ["shadow", "glass", "filters", "gradient", "clip-path", "transform", "radius", "grid", "flexbox", "background", "text-shadow", "fluid-type", "button", "animation", "easing", "palette", "variables"]
 
 export interface BrandColor {
   id: string
