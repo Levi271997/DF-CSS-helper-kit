@@ -21,6 +21,7 @@ import { buildScrollbarCss, type ScrollbarSettings } from "./scrollbar/build-css
 import { arrowDecls, borderTriangle, clipTriangle } from "./shapes/build-css"
 import { buildAspectCss, positionValue as aspectPosition, type AspectSettings } from "./aspect/build-css"
 import { appliesAt, buildBlocks, buildMediaCss, type MediaSettings } from "./media/build-css"
+import { buildBlendCss, type BlendSettings } from "./blend/build-css"
 import { blobValue, buildRadius, randomBlob, type RadiusSettings } from "./radius/build-css"
 
 const layer = (p: Partial<ShadowLayer>): ShadowLayer => ({
@@ -528,5 +529,24 @@ describe("media queries", () => {
   it("adds extra queries and works without a selector", () => {
     const css = buildMediaCss({ ...base, selector: "", extras: { ...base.extras, reducedMotion: true } })
     expect(css).toContain("@media (prefers-reduced-motion: reduce) {\n  /* your styles */\n}")
+  })
+})
+
+describe("blend modes", () => {
+  const base: BlendSettings = {
+    type: "mix", layer: "shape", mode: "multiply", color: color("#f8a02d"), text: "Hi", imageUrl: "hero.jpg", className: "blend-layer",
+  }
+
+  it("writes mix-blend-mode with an isolation wrapper", () => {
+    const css = buildBlendCss(base)
+    expect(css).toContain(".blend-layer {\n  background-color: #f8a02d;\n  mix-blend-mode: multiply;\n}")
+    expect(css).toContain("isolation: isolate;")
+    expect(buildBlendCss({ ...base, layer: "text", mode: "difference" })).toContain("  color: #f8a02d;\n  mix-blend-mode: difference;")
+  })
+
+  it("writes background-blend-mode with the image", () => {
+    expect(buildBlendCss({ ...base, type: "background", className: "blend-bg", mode: "luminosity" })).toBe(
+      '.blend-bg {\n  background-color: #f8a02d;\n  background-image: url("hero.jpg");\n  background-size: cover;\n  background-position: center;\n  background-blend-mode: luminosity;\n}',
+    )
   })
 })

@@ -22,6 +22,7 @@ import ScrollbarPage from "@/generators/scrollbar/ScrollbarPage"
 import ShapesPage from "@/generators/shapes/ShapesPage"
 import AspectPage from "@/generators/aspect/AspectPage"
 import MediaPage from "@/generators/media/MediaPage"
+import BlendPage from "@/generators/blend/BlendPage"
 
 // Pages are small (~30 KB combined), so they're bundled up front — no loading flash.
 export const TOOLS: { id: ToolId; path: string; label: string; page: ComponentType }[] = [
@@ -47,4 +48,5 @@ export const TOOLS: { id: ToolId; path: string; label: string; page: ComponentTy
   { id: "shapes", path: "/shapes", label: "Triangles and shapes", page: ShapesPage },
   { id: "aspect", path: "/aspect", label: "Aspect ratio and fit", page: AspectPage },
   { id: "media", path: "/media", label: "Media queries", page: MediaPage },
+  { id: "blend", path: "/blend", label: "Blend modes", page: BlendPage },
 ]
