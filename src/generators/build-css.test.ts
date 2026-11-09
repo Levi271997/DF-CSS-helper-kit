@@ -18,6 +18,7 @@ import { buildPaletteCss, buildShades, checkContrast } from "./palette/build-css
 import { buildTokens, buildVariablesCss, uniqueNames, type VariablesSettings } from "./variables/build-css"
 import { buildBorder, type BorderSettings, type Side as BorderSide } from "./border/build-css"
 import { buildScrollbarCss, type ScrollbarSettings } from "./scrollbar/build-css"
+import { arrowDecls, borderTriangle, clipTriangle } from "./shapes/build-css"
 import { blobValue, buildRadius, randomBlob, type RadiusSettings } from "./radius/build-css"
 
 const layer = (p: Partial<ShadowLayer>): ShadowLayer => ({
@@ -459,5 +460,24 @@ describe("scrollbar", () => {
     expect(css).toContain(".my-box::-webkit-scrollbar-thumb:hover {")
     expect(css).toContain("  .my-box {\n    scrollbar-width: thin;")
     expect(css).toContain("border: 3px solid")
+  })
+})
+
+describe("shapes", () => {
+  it("builds border and clip-path triangles", () => {
+    expect(borderTriangle("up", 80, 60, "#f00")).toEqual([
+      ["width", "0"], ["height", "0"],
+      ["border-left", "40px solid transparent"], ["border-right", "40px solid transparent"], ["border-bottom", "60px solid #f00"],
+    ])
+    expect(borderTriangle("down-right", 20, 30, "#f00")).toContainEqual(["border-left", "20px solid transparent"])
+    expect(clipTriangle("right", 20, 30, "#f00")).toContainEqual(["clip-path", "polygon(0 0, 100% 50%, 0 100%)"])
+  })
+
+  it("places the bubble arrow on the chosen side", () => {
+    expect(arrowDecls("bottom", 30, 10, "#000")).toEqual([
+      ["content", '""'], ["position", "absolute"], ["top", "100%"], ["left", "30%"], ["transform", "translateX(-50%)"],
+      ["border", "10px solid transparent"], ["border-top-color", "#000"],
+    ])
+    expect(arrowDecls("left", 50, 8, "#000")).toContainEqual(["border-right-color", "#000"])
   })
 })
