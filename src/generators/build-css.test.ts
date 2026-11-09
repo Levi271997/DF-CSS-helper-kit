@@ -19,6 +19,7 @@ import { buildTokens, buildVariablesCss, uniqueNames, type VariablesSettings } f
 import { buildBorder, type BorderSettings, type Side as BorderSide } from "./border/build-css"
 import { buildScrollbarCss, type ScrollbarSettings } from "./scrollbar/build-css"
 import { arrowDecls, borderTriangle, clipTriangle } from "./shapes/build-css"
+import { buildAspectCss, positionValue as aspectPosition, type AspectSettings } from "./aspect/build-css"
 import { blobValue, buildRadius, randomBlob, type RadiusSettings } from "./radius/build-css"
 
 const layer = (p: Partial<ShadowLayer>): ShadowLayer => ({
@@ -479,5 +480,22 @@ describe("shapes", () => {
       ["border", "10px solid transparent"], ["border-top-color", "#000"],
     ])
     expect(arrowDecls("left", 50, 8, "#000")).toContainEqual(["border-right-color", "#000"])
+  })
+})
+
+describe("aspect ratio", () => {
+  const base: AspectSettings = { ratio: "16/9", customW: 5, customH: 2, fit: "cover", posX: 50, posY: 50, className: "media" }
+
+  it("writes the box and image rules", () => {
+    expect(buildAspectCss(base)).toBe(
+      ".media {\n  aspect-ratio: 16 / 9;\n  overflow: hidden;\n}\n\n.media img,\n.media video {\n  display: block;\n  width: 100%;\n  height: 100%;\n  object-fit: cover;\n  object-position: center;\n}",
+    )
+  })
+
+  it("handles custom ratios, keyword positions and fill", () => {
+    expect(buildAspectCss({ ...base, ratio: "custom", customW: 5, customH: 2 })).toContain("aspect-ratio: 5 / 2;")
+    expect(aspectPosition(0, 100)).toBe("left bottom")
+    expect(aspectPosition(30, 50)).toBe("30% center")
+    expect(buildAspectCss({ ...base, fit: "fill", posX: 0 })).not.toContain("object-position")
   })
 })

@@ -1,5 +1,5 @@
 /** Built-in colorful backdrop so glass and filter previews have something to work on. */
-const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600">
+const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">
 <defs>
 <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#131028"/><stop offset="0.5" stop-color="#1e1242"/><stop offset="1" stop-color="#c10fff"/></linearGradient>
 <radialGradient id="sun" cx="0.5" cy="0.5" r="0.5"><stop offset="0" stop-color="#ffbc7d"/><stop offset="1" stop-color="#f58825"/></radialGradient>
