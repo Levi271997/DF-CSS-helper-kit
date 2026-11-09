@@ -9,6 +9,7 @@ import { buildTransform, TRANSFORM_DEFAULTS } from "./transform/build-css"
 import { buildGridCss, buildGridHtml, collides, fitItems, rectFromCells, type GridSettings } from "./grid/build-css"
 import { buildFlexCss, buildFlexHtml, newFlexItem, type FlexSettings } from "./flexbox/build-css"
 import { buildBackground, positionValue, type BackgroundSettings } from "./background/build-css"
+import { buildTextShadow, longShadow, type TextShadowLayer, type TextShadowSettings } from "./text-shadow/build-css"
 import { blobValue, buildRadius, randomBlob, type RadiusSettings } from "./radius/build-css"
 
 const layer = (p: Partial<ShadowLayer>): ShadowLayer => ({
@@ -228,5 +229,26 @@ describe("background", () => {
   it("formats positions", () => {
     expect(positionValue(50, 50)).toBe("center")
     expect(positionValue(25, 50)).toBe("25% center")
+  })
+})
+
+describe("text shadow", () => {
+  const base: TextShadowSettings = {
+    layers: [], text: "Hi", fontSize: 48, fontWeight: 700, textColor: color("#000"), background: color("#fff"),
+  }
+  const tl = (p: Partial<TextShadowLayer>): TextShadowLayer => ({ id: "1", enabled: true, x: 1, y: 2, blur: 3, color: color("#000"), ...p })
+
+  it("outputs none with no enabled layers", () => {
+    expect(buildTextShadow({ ...base, layers: [tl({ enabled: false })] })).toEqual([["text-shadow", "none"]])
+  })
+
+  it("joins enabled layers in order", () => {
+    const [[, v]] = buildTextShadow({ ...base, layers: [tl({}), tl({ id: "2", enabled: false }), tl({ id: "3", x: 0, color: color("#ff0000", 0.5) })] })
+    expect(v).toBe("1px 2px 3px #000000,\n    0px 2px 3px rgba(255, 0, 0, 0.5)")
+  })
+
+  it("builds a stepped long shadow", () => {
+    const layers = longShadow(3, "#000")
+    expect(layers.map((l) => [l.x, l.y, l.blur])).toEqual([[1, 1, 0], [2, 2, 0], [3, 3, 0]])
   })
 })
