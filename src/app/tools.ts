@@ -17,6 +17,7 @@ import FlexboxPage from "@/generators/flexbox/FlexboxPage"
 import BackgroundPage from "@/generators/background/BackgroundPage"
 import PalettePage from "@/generators/palette/PalettePage"
 import VariablesPage from "@/generators/variables/VariablesPage"
+import BorderPage from "@/generators/border/BorderPage"
 
 // Pages are small (~30 KB combined), so they're bundled up front — no loading flash.
 export const TOOLS: { id: ToolId; path: string; label: string; page: ComponentType }[] = [
@@ -37,4 +38,5 @@ export const TOOLS: { id: ToolId; path: string; label: string; page: ComponentTy
   { id: "background", path: "/background", label: "Background", page: BackgroundPage },
   { id: "palette", path: "/palette", label: "Colour palette", page: PalettePage },
   { id: "variables", path: "/variables", label: "CSS variables", page: VariablesPage },
+  { id: "border", path: "/border", label: "Border and outline", page: BorderPage },
 ]

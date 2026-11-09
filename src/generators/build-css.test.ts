@@ -16,6 +16,7 @@ import { PRESET_IDS, animationValue, buildAnimationCss, type AnimationSettings }
 import { buildEasingCss, parseBezier, type EasingSettings } from "./easing/build-css"
 import { buildPaletteCss, buildShades, checkContrast } from "./palette/build-css"
 import { buildTokens, buildVariablesCss, uniqueNames, type VariablesSettings } from "./variables/build-css"
+import { buildBorder, type BorderSettings, type Side as BorderSide } from "./border/build-css"
 import { blobValue, buildRadius, randomBlob, type RadiusSettings } from "./radius/build-css"
 
 const layer = (p: Partial<ShadowLayer>): ShadowLayer => ({
@@ -409,5 +410,32 @@ describe("css variables", () => {
     expect(css).toContain("  --brand-space-md: 32px;")
     expect(css).not.toContain("--brand-x")
     expect(uniqueNames(["", "a", "A"], "color")).toEqual(["color-1", "a", "a-2"])
+  })
+})
+
+describe("border", () => {
+  const sd = (p: Partial<BorderSide> = {}): BorderSide => ({ width: 2, style: "solid", color: color("#000"), ...p })
+  const base: BorderSettings = {
+    linked: true, sides: { top: sd(), right: sd(), bottom: sd(), left: sd() }, outline: false, outlineWidth: 2,
+    outlineStyle: "dashed", outlineColor: color("#f8a02d"), outlineOffset: 0, radius: 0, fill: color("#fff"),
+  }
+
+  it("uses one shorthand when all sides match", () => {
+    expect(buildBorder(base)).toEqual([["border", "2px solid #000000"]])
+  })
+
+  it("writes each side when they differ, and the outline", () => {
+    const decls = buildBorder({
+      ...base, sides: { ...base.sides, bottom: sd({ width: 4, style: "dashed" }), left: sd({ style: "none" }) },
+      outline: true, outlineOffset: 4,
+    })
+    expect(decls).toEqual([
+      ["border-top", "2px solid #000000"],
+      ["border-right", "2px solid #000000"],
+      ["border-bottom", "4px dashed #000000"],
+      ["border-left", "none"],
+      ["outline", "2px dashed #f8a02d"],
+      ["outline-offset", "4px"],
+    ])
   })
 })
