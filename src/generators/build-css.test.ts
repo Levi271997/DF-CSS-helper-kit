@@ -8,6 +8,7 @@ import { buildClip, insertIndex } from "./clip-path/build-css"
 import { buildTransform, TRANSFORM_DEFAULTS } from "./transform/build-css"
 import { buildGridCss, buildGridHtml, collides, fitItems, rectFromCells, type GridSettings } from "./grid/build-css"
 import { buildFlexCss, buildFlexHtml, newFlexItem, type FlexSettings } from "./flexbox/build-css"
+import { buildBackground, positionValue, type BackgroundSettings } from "./background/build-css"
 import { blobValue, buildRadius, randomBlob, type RadiusSettings } from "./radius/build-css"
 
 const layer = (p: Partial<ShadowLayer>): ShadowLayer => ({
@@ -199,5 +200,33 @@ describe("flexbox", () => {
     expect(css).toContain("align-content: center;")
     expect(css).toContain("gap: 8px 16px;")
     expect(buildFlexHtml(base)).toBe('<div class="parent">\n  <div class="child1">1</div>\n  <div class="child2">2</div>\n</div>')
+  })
+})
+
+describe("background", () => {
+  const base: BackgroundSettings = {
+    color: color("#1e1242"), image: true, imageUrl: "/img/hero.jpg", size: "cover", sizePercent: 50,
+    posX: 50, posY: 50, repeat: "no-repeat", attachment: "scroll", overlay: false, overlayColor: color("#000", 0.5),
+  }
+
+  it("outputs only the color when the image is off or empty", () => {
+    expect(buildBackground({ ...base, image: false })).toEqual([["background-color", "#1e1242"]])
+    expect(buildBackground({ ...base, imageUrl: "  " })).toEqual([["background-color", "#1e1242"]])
+  })
+
+  it("builds image layers with overlay, custom size and fixed attachment", () => {
+    expect(buildBackground({ ...base, overlay: true, size: "custom", sizePercent: 40, posX: 0, posY: 100, attachment: "fixed" })).toEqual([
+      ["background-color", "#1e1242"],
+      ["background-image", 'linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("/img/hero.jpg")'],
+      ["background-size", "40%"],
+      ["background-position", "left bottom"],
+      ["background-repeat", "no-repeat"],
+      ["background-attachment", "fixed"],
+    ])
+  })
+
+  it("formats positions", () => {
+    expect(positionValue(50, 50)).toBe("center")
+    expect(positionValue(25, 50)).toBe("25% center")
   })
 })
