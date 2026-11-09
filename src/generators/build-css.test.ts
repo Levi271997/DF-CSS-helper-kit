@@ -20,6 +20,7 @@ import { buildBorder, type BorderSettings, type Side as BorderSide } from "./bor
 import { buildScrollbarCss, type ScrollbarSettings } from "./scrollbar/build-css"
 import { arrowDecls, borderTriangle, clipTriangle } from "./shapes/build-css"
 import { buildAspectCss, positionValue as aspectPosition, type AspectSettings } from "./aspect/build-css"
+import { appliesAt, buildBlocks, buildMediaCss, type MediaSettings } from "./media/build-css"
 import { blobValue, buildRadius, randomBlob, type RadiusSettings } from "./radius/build-css"
 
 const layer = (p: Partial<ShadowLayer>): ShadowLayer => ({
@@ -497,5 +498,35 @@ describe("aspect ratio", () => {
     expect(aspectPosition(0, 100)).toBe("left bottom")
     expect(aspectPosition(30, 50)).toBe("30% center")
     expect(buildAspectCss({ ...base, fit: "fill", posX: 0 })).not.toContain("object-position")
+  })
+})
+
+describe("media queries", () => {
+  const base: MediaSettings = {
+    preset: "elementor", devices: [{ id: "t", name: "Tablet", max: 1024 }, { id: "m", name: "Mobile", max: 767 }],
+    topName: "Desktop", approach: "desktop-first", exact: false, syntax: "classic", selector: ".hero",
+    extras: { reducedMotion: false, dark: false, hover: false, landscape: false, print: false },
+  }
+
+  it("builds a desktop-first skeleton like Elementor", () => {
+    expect(buildMediaCss(base)).toBe(
+      "/* Desktop (base styles) */\n.hero {\n  \n}\n\n" +
+        "/* Tablet: 1024px and below */\n@media (max-width: 1024px) {\n  .hero {\n    \n  }\n}\n\n" +
+        "/* Mobile: 767px and below */\n@media (max-width: 767px) {\n  .hero {\n    \n  }\n}",
+    )
+  })
+
+  it("builds mobile-first, exact ranges and range syntax", () => {
+    const mf = buildBlocks({ ...base, approach: "mobile-first" })
+    expect(mf.map((b) => b.query)).toEqual([null, "(min-width: 768px)", "(min-width: 1025px)"])
+    const exact = buildBlocks({ ...base, exact: true, syntax: "range" })
+    expect(exact.map((b) => b.query)).toEqual([null, "(768px <= width <= 1024px)", "(width <= 767px)"])
+    expect(appliesAt(exact[1], 900)).toBe(true)
+    expect(appliesAt(exact[2], 900)).toBe(false)
+  })
+
+  it("adds extra queries and works without a selector", () => {
+    const css = buildMediaCss({ ...base, selector: "", extras: { ...base.extras, reducedMotion: true } })
+    expect(css).toContain("@media (prefers-reduced-motion: reduce) {\n  /* your styles */\n}")
   })
 })
